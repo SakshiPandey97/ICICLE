@@ -2,6 +2,17 @@
 
 ICICLE is a deep learning tool for identifying Integrative and Conjugative Elements (ICEs) in genomic sequences without requiring gene-level annotation. It uses a BERT-style transformer encoder trained on BPE-tokenized DNA windows.
 
+## Data & Pre-trained Model
+
+Training data and a pre-trained model checkpoint are available on Zenodo:
+
+**[Download from Zenodo](https://zenodo.org/records/18894888?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjMxNGEzYjg2LWJlNTYtNDQ2ZS04YjliLWVkYWY0M2E0MmE2NSIsImRhdGEiOnt9LCJyYW5kb20iOiIwZGZlZmU3Y2RiNWMxM2IxODRjZDU0ZjM3NTY5NWEyMiJ9.p4kxcb_9wrIatB3v-F9JjoytRpBhtZDTNF1y5y4JsdBYf8BrdkG1IiTbGSOkPTfoFxJTSUIfEC9oWkwR9iAF_A)**
+
+Includes:
+- `ICE_seq_all.fasta` — Known ICE sequences
+- `ICE_WG_masked_filtered.fasta` — Background genomes with ICE regions masked
+- `best.pt` — Pre-trained model checkpoint (768-dim, 12 layers, ~100M parameters)
+
 ## Project Structure
 
 ```
@@ -45,9 +56,12 @@ pip install sentencepiece scikit-learn imbalanced-learn numpy psutil
 
 ### Step 1: Prepare Input Data
 
-You need two FASTA files:
-- **ICE sequences**: known ICE elements (e.g., `ICE_seq_all.fasta`)
-- **Background genomes**: whole genomes with ICE regions masked (e.g., `ICE_WG_masked_filtered.fasta`)
+Download the training data from [Zenodo](https://zenodo.org/records/18894888?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjMxNGEzYjg2LWJlNTYtNDQ2ZS04YjliLWVkYWY0M2E0MmE2NSIsImRhdGEiOnt9LCJyYW5kb20iOiIwZGZlZmU3Y2RiNWMxM2IxODRjZDU0ZjM3NTY5NWEyMiJ9.p4kxcb_9wrIatB3v-F9JjoytRpBhtZDTNF1y5y4JsdBYf8BrdkG1IiTbGSOkPTfoFxJTSUIfEC9oWkwR9iAF_A), which includes:
+- `ICE_seq_all.fasta` — Known ICE sequences
+- `ICE_WG_masked_filtered.fasta` — Background genomes with ICE regions masked
+- `best.pt` — Pre-trained model checkpoint (skip to Step 5 to use directly)
+
+Alternatively, provide your own FASTA files with ICE sequences and masked background genomes.
 
 ### Step 2: Tokenize and Encode
 
@@ -108,6 +122,8 @@ python test_inference.py \
     --batch_size 64 \
     --optimize_threshold
 ```
+
+To use the pre-trained model from Zenodo, place `best.pt` in a directory and point `--checkpoint_dir` to it.
 
 Results are saved to `checkpoints/test_results.json`.
 
